@@ -34,9 +34,7 @@ class HermesWorkspace < Formula
       cd "#{libexec}/.."
       exec pnpm dev "$@"
     EOS
-  end
 
-  post_install_steps do
     (var/"lib/hermes-workspace").mkpath
     (var/"log/hermes-workspace").mkpath
   end
