@@ -4,7 +4,7 @@ name: brew bump
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - .github/workflows/autobump.yml
   schedule:
