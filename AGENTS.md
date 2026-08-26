@@ -8,14 +8,12 @@ The actual source code is **not here**. The formula fetches a tarball from `http
 
 ## Directory structure
 
-```
-Formula/hermes-workspace.rb   # The only formula — single .rb file
-.github/
-  dependabot.yml              # Weekly GitHub Actions dependency bumps
-  workflows/
-    tests.yml                 # brew test-bot CI (macOS + Ubuntu)
-    autobump.yml              # Daily scheduled bump of formula version
-```
+- `Formula/hermes-workspace.rb` — The only formula (single `.rb` file)
+- `.github/`
+  - `dependabot.yml` — Weekly GitHub Actions dependency bumps
+  - `workflows/`
+    - `tests.yml` — brew test-bot CI (macOS + Ubuntu)
+    - `autobump.yml` — Daily scheduled bump of formula version
 
 ## Key commands
 

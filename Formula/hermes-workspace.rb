@@ -1,5 +1,5 @@
 class HermesWorkspace < Formula
-  desc "Native web workspace for Hermes Agent — chat, terminal, memory, skills, inspector"
+  desc "Native web workspace for Hermes Agent: chat, terminal, memory, skills"
   homepage "https://github.com/outsourc-e/hermes-workspace"
   url "https://github.com/outsourc-e/hermes-workspace/archive/refs/tags/v2.3.0.tar.gz"
   sha256 "1b0f4478527af098b0cefe33c61ec7dee16e520a30ec195fa0919eba577ddbbc"
@@ -36,7 +36,7 @@ class HermesWorkspace < Formula
     EOS
   end
 
-  def post_install
+  post_install_steps do
     (var/"lib/hermes-workspace").mkpath
     (var/"log/hermes-workspace").mkpath
   end
@@ -50,6 +50,6 @@ class HermesWorkspace < Formula
 
   test do
     # Test that the wrapper script exists and runs
-    assert_match "HERMES_HOME", shell_output("#{bin}/hermes-workspace --help 2>&1", 0)
+    assert_match "HERMES_HOME", shell_output("#{bin}/hermes-workspace --help 2>&1")
   end
 end
