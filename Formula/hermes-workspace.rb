@@ -69,12 +69,7 @@ class HermesWorkspace < Formula
       DBUS_SESSION_BUS_ADDRESS so the service can connect to the D-Bus
       session bus. Run this once to add them to your ~/.bashrc:
 
-        cat >> ~/.bashrc << 'EOF'
-
-# hermes-workspace: D-Bus session bus
-export XDG_RUNTIME_DIR=/run/user/$(id -u)
-export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
-EOF
+        { echo; echo "# hermes-workspace: D-Bus session bus"; echo 'export XDG_RUNTIME_DIR=/run/user/$(id -u)'; echo 'export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus'; } >> ~/.bashrc
 
       Then reload your shell:
 
