@@ -56,11 +56,18 @@ class HermesWorkspace < Formula
 
   def caveats
     <<~EOS
-      If you are running hermes-workspace as a service on Linux, you may need
-      to set XDG_RUNTIME_DIR and DBUS_SESSION_BUS_ADDRESS so the service can
-      connect to the D-Bus session bus.
+      Start the service (user-level deployment):
 
-      Run this once to add them to your ~/.bashrc:
+        brew services start #{name}
+
+      On Linux, enable lingering so the service persists after logout and
+      starts on boot:
+
+        loginctl enable-linger $USER
+
+      On Linux, you may also need to set XDG_RUNTIME_DIR and
+      DBUS_SESSION_BUS_ADDRESS so the service can connect to the D-Bus
+      session bus. Run this once to add them to your ~/.bashrc:
 
         printf '\\n# hermes-workspace: D-Bus session bus\\nexport XDG_RUNTIME_DIR=/run/user/$(id -u)\\nexport DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus\\n' >> ~/.bashrc
 
