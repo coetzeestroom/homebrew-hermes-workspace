@@ -57,15 +57,16 @@ class HermesWorkspace < Formula
   def caveats
     <<~EOS
       If you are running hermes-workspace as a service on Linux, you may need
-      to set the following environment variables so the service can connect to
-      the D-Bus session bus:
+      to set XDG_RUNTIME_DIR and DBUS_SESSION_BUS_ADDRESS so the service can
+      connect to the D-Bus session bus.
 
-        export XDG_RUNTIME_DIR=/run/user/1000
-        export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+      Run this once to add them to your ~/.bashrc:
 
-      Replace 1000 with your actual user ID (run `id -u` to check).
-      Add these to your shell profile (~/.bashrc, ~/.zshrc, etc.) or set them
-      in a systemd drop-in if managing the service via systemd.
+        printf '\\n# hermes-workspace: D-Bus session bus\\nexport XDG_RUNTIME_DIR=/run/user/$(id -u)\\nexport DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus\\n' >> ~/.bashrc
+
+      Then reload your shell:
+
+        source ~/.bashrc
     EOS
   end
 
