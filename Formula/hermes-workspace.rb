@@ -28,10 +28,11 @@ class HermesWorkspace < Formula
     system "pnpm", "install", "--no-frozen-lockfile"
     system "pnpm", "build"
 
-    # Install the built output
-    # The build outputs to dist/ and the electron bundle to electron/
-    # We'll install the built artifacts and create a wrapper script
-    libexec.install "dist", "electron", "server-entry.js", "package.json", "pnpm-lock.yaml"
+    # Install the built output and node_modules required at runtime.
+    # dist/server/server.js is a TanStack Start SSR bundle that still contains
+    # bare ESM imports (e.g. 'react') which Node resolves via node_modules —
+    # it is not a fully self-contained bundle, so node_modules must ship too.
+    libexec.install "dist", "electron", "node_modules", "server-entry.js", "package.json", "pnpm-lock.yaml"
 
     # Create a wrapper script for the workspace server
     (bin/"hermes-workspace").write <<~EOS
