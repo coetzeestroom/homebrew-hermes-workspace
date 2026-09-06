@@ -34,13 +34,17 @@ class HermesWorkspace < Formula
     # it is not a fully self-contained bundle, so node_modules must ship too.
     libexec.install "dist", "electron", "node_modules", "server-entry.js", "package.json", "pnpm-lock.yaml"
 
-    # Create a wrapper script for the workspace server
+    node = Formula["node@22"].opt_bin/"node"
+
+    # Create a wrapper script for the workspace server.
+    # Use the absolute path to node so the script works regardless of PATH
+    # (e.g. when invoked by systemd which starts with a minimal environment).
     (bin/"hermes-workspace").write <<~EOS
       #!/bin/bash
       export HERMES_HOME="${HERMES_HOME:-#{var}/lib/hermes-workspace}"
       export HERMES_WORKSPACE_PORT="${HERMES_WORKSPACE_PORT:-3000}"
       cd "#{libexec}"
-      exec node server-entry.js "$@"
+      exec "#{node}" server-entry.js "$@"
     EOS
 
     # Also provide the electron dev entry point
@@ -81,6 +85,10 @@ class HermesWorkspace < Formula
   service do
     run [opt_bin/"hermes-workspace"]
     keep_alive true
+    environment_variables PATH: std_service_path_env,
+                          HERMES_HOME: var/"lib/hermes-workspace",
+                          HERMES_WORKSPACE_PORT: "3000"
+    working_dir var/"lib/hermes-workspace"
     log_path var/"log/hermes-workspace/hermes-workspace.log"
     error_log_path var/"log/hermes-workspace/hermes-workspace.log"
   end
