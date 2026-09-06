@@ -10,15 +10,22 @@ class HermesWorkspace < Formula
   depends_on "pnpm"
 
   def install
-    # pnpm 11 ships with strictDepBuilds=true by default, which blocks build
-    # scripts for electron, esbuild, unrs-resolver, etc. (ERR_PNPM_IGNORED_BUILDS).
+    # pnpm 11 moved all non-auth config into pnpm-workspace.yaml and changed
+    # strictDepBuilds to true by default, blocking build scripts for packages
+    # like electron, esbuild, and unrs-resolver (ERR_PNPM_IGNORED_BUILDS).
     # It also changed the lockfile format from v9 to v11, so --frozen-lockfile
-    # would abort when the upstream lockfile was generated with pnpm 9/10.
-    # --no-frozen-lockfile allows pnpm 11 to migrate the lockfile format in place,
-    # and --config.strictDepBuilds=false permits the required build scripts to run.
-    system "pnpm", "install",
-           "--no-frozen-lockfile",
-           "--config.strictDepBuilds=false"
+    # aborts when the upstream lockfile was generated with pnpm 9/10.
+    # Write pnpm-workspace.yaml explicitly to guarantee allowBuilds is present
+    # regardless of what pnpm version is installed, then install without
+    # --frozen-lockfile so pnpm 11 can migrate the lockfile format in place.
+    (buildpath/"pnpm-workspace.yaml").write <<~YAML
+      allowBuilds:
+        electron: true
+        electron-winstaller: true
+        esbuild: true
+        unrs-resolver: true
+    YAML
+    system "pnpm", "install", "--no-frozen-lockfile"
     system "pnpm", "build"
 
     # Install the built output
